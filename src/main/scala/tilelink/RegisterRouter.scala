@@ -7,6 +7,7 @@ import chisel3.experimental.RawModule
 import firrtl.annotations.ModuleName
 import freechips.rocketchip.config.Parameters
 import freechips.rocketchip.diplomacy._
+import freechips.rocketchip.diplomaticobjectmodel.model.{OMMemoryRegion, OMRegister}
 import freechips.rocketchip.regmapper._
 import freechips.rocketchip.interrupts._
 import freechips.rocketchip.util.{ElaborationArtefacts, GenRegDescsAnno, HeterogeneousBag}
@@ -86,6 +87,14 @@ case class TLRegisterNode(
 
     genRegDescsJson(mapping:_*)
   }
+
+  def om(mapping: RegField.Map*): OMMemoryRegion= {
+  OMRegister.convert(rawModule = Module.currentModule.get.asInstanceOf[RawModule],
+    baseAddress = address.head.base,
+    mapping = mapping:_*
+  )
+
+}
 
 
   def genRegDescsJson(mapping: RegField.Map*) {
