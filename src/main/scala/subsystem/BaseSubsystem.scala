@@ -2,19 +2,11 @@
 
 package freechips.rocketchip.subsystem
 
-import java.io.{File, FileWriter}
-
 import Chisel._
 import freechips.rocketchip.config.{Field, Parameters}
 import freechips.rocketchip.diplomacy._
-import freechips.rocketchip.diplomaticobjectmodel.DiplomaticObjectModelUtils.toJson
-import freechips.rocketchip.diplomaticobjectmodel.{DiplomaticObjectModelUtils, OMEnumSerializer}
-import freechips.rocketchip.diplomaticobjectmodel.model.OMComponent
-import freechips.rocketchip.tilelink._
+import freechips.rocketchip.diplomaticobjectmodel.DiplomaticObjectModelUtils
 import freechips.rocketchip.util._
-import org.json4s.{Extraction, NoTypeHints}
-import org.json4s.jackson.JsonMethods.pretty
-import org.json4s.jackson.Serialization
 
 case object SystemBusKey extends Field[SystemBusParams]
 case object FrontBusKey extends Field[FrontBusParams]
