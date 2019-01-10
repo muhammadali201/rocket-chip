@@ -9,14 +9,17 @@ verilog = \
 .SECONDARY: $(firrtl) $(verilog)
 
 $(generated_dir)/%.fir $(generated_dir)/%.d: $(FIRRTL_JAR) $(chisel_srcs) $(bootrom_img)
+        echo " MakeFrag-Verilator, %.fir, %.d Target"
 	mkdir -p $(dir $@)
 	cd $(base_dir) && $(SBT) "runMain $(PROJECT).Generator $(generated_dir) $(PROJECT) $(MODEL) $(CFG_PROJECT) $(CONFIG)"
 
 %.v %.conf: %.fir $(FIRRTL_JAR)
+        echo ".v, .conf target, this will run when verilog file has not been built"
 	mkdir -p $(dir $@)
 	$(FIRRTL) $(patsubst %,-i %,$(filter %.fir,$^)) -o $*.v -X verilog --infer-rw $(MODEL) --repl-seq-mem -c:$(MODEL):-o:$*.conf -faf $*.anno.json -td $(generated_dir)/$(long_name)/
 
 $(generated_dir)/$(long_name).behav_srams.v : $(generated_dir)/$(long_name).conf $(VLSI_MEM_GEN)
+        echo "behav_srams.v Target "
 	cd $(generated_dir) && \
 	$(VLSI_MEM_GEN) $(generated_dir)/$(long_name).conf > $@.tmp && \
 	mv -f $@.tmp $@
@@ -68,6 +71,8 @@ model_header = $(generated_dir)/$(long_name)/V$(MODEL).h
 model_header_debug = $(generated_dir_debug)/$(long_name)/V$(MODEL).h
 
 $(emu): $(verilog) $(cppfiles) $(headers) $(INSTALLED_VERILATOR)
+        echo "emu Target, Lets see where it goes emu = $(emu)"
+        echo "emu Target, cppfiles = $(cppfiles)"
 	mkdir -p $(generated_dir)/$(long_name)
 	$(VERILATOR) $(VERILATOR_FLAGS) -Mdir $(generated_dir)/$(long_name) \
 	-o $(abspath $(sim_dir))/$@ $(verilog) $(cppfiles) -LDFLAGS "$(LDFLAGS)" \
