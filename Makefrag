@@ -25,6 +25,7 @@ FIRRTL ?= java -Xmx$(JVM_MEMORY) -Xss8M -XX:MaxPermSize=256M -cp "$(FIRRTL_JAR)"
 
 # Build firrtl.jar and put it where chisel3 can find it.
 $(FIRRTL_JAR): $(shell find $(base_dir)/firrtl/src/main/scala -iname "*.scala")
+    echo "First Target That is executed: $(FIRRTL_JAR)"
 	$(MAKE) -C $(base_dir)/firrtl SBT="$(SBT)" root_dir=$(base_dir)/firrtl build-scala
 	touch $(FIRRTL_JAR)
 	mkdir -p $(base_dir)/lib
